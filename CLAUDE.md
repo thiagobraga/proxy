@@ -1,6 +1,7 @@
-# AI Instructions for traefik
+# AI Instructions for proxy
 
 ## Common commands
+- Project needs a proxy network: `docker network create proxy`
 - Generate Certs: `docker compose run --rm mkcert`
 - Start (detached): `docker compose up -d`
 - Stop (fast): `docker compose down --timeout 0`
