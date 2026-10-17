@@ -1,33 +1,19 @@
-name: traefik
+name: proxy
 
 services:
   traefik:
-    image: traefik:v3
     container_name: traefik
+    image: traefik:v3
     restart: unless-stopped
-    ports: ["80:80", "443:443", "8090:8080"]
-    command:
-      - "--api.dashboard=true"
-      - "--api.insecure=true"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.network=proxy"
-      - "--providers.file.directory=/etc/traefik/dynamic"
-      - "--providers.file.watch=true"
-      - "--accesslog=true"
-      - "--accesslog.filepath=/var/log/traefik/access.log"
-      - "--accesslog.format=json"
-      - "--accesslog.bufferingsize=100"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./dynamic:/etc/traefik/dynamic:ro
-      - ./certs:/certs:ro
-      - ./logs:/var/log/traefik
+    ports: ['80:80', '443:443', '8090:8080']
     networks: [proxy]
+    volumes:
+      - ./certs:/certs:ro
+      - ./dynamic:/etc/traefik/dynamic:ro
+      - ./logs:/var/log/traefik
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 networks:
   proxy:
-    name: proxy
     external: true
