@@ -42,28 +42,6 @@ mkcert \
   127.0.0.1 localhost
 ```
 
-### Optional: Generate certificates using Docker:
-
-```bash
-docker run --rm \
-  -v $(pwd)/certs:/certs \
-  alpine/mkcert \
-  -cert-file /certs/local-cert.pem \
-  -key-file /certs/local-key.pem \
-  127.0.0.1 localhost "*.local"
-```
-
-Or using docker compose:
-`compose.yml`
-```yaml
-mkcert:
-  image: alpine/mkcert
-  container_name: mkcert
-  command: -cert-file /certs/local-cert.pem -key-file /certs/local-key.pem localhost 127.0.0.1 "*.local"
-  volumes: [./certs:/certs, "${HOME}/.local/share/mkcert:/root/.local/share/mkcert"]
-```
-Note that by doing this, you need to add certificates to browsers manually.
-
 ## 4. Start Traefik
 
 ```bash
@@ -101,7 +79,29 @@ To connect another project to this Traefik instance:
 ## 6. Dashboard
 - [http://localhost:8090](http://localhost:8090)
 
-## 7. Troubleshooting
+## 7. Optional: Generate certificates using Docker
+
+```bash
+docker run --rm \
+  -v $(pwd)/certs:/certs \
+  alpine/mkcert \
+  -cert-file /certs/local-cert.pem \
+  -key-file /certs/local-key.pem \
+  127.0.0.1 localhost "*.local"
+```
+
+Or using docker compose:
+`compose.yml`
+```yaml
+mkcert:
+  image: alpine/mkcert
+  container_name: mkcert
+  command: -cert-file /certs/local-cert.pem -key-file /certs/local-key.pem localhost 127.0.0.1 "*.local"
+  volumes: [./certs:/certs, "${HOME}/.local/share/mkcert:/root/.local/share/mkcert"]
+```
+Note that by doing this, you need to add certificates to browsers manually.
+
+## 8. Troubleshooting
 If your browser shows a "Not Secure" warning:
 1. Ensure you ran `mkcert -install` on your host.
 2. Restart your browser entirely.
