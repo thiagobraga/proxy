@@ -1,5 +1,6 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png" alt="Traefik Logo" width="300">
+  <h1>Proxy</h1>
 </div>
 
 A shared Traefik instance for local development using Docker Compose and HTTPS.
@@ -8,47 +9,35 @@ A shared Traefik instance for local development using Docker Compose and HTTPS.
 
 - [**Docker**](https://docs.docker.com/engine/install/ubuntu/)
 - [**Docker Compose plugin**](https://docs.docker.com/compose/install/linux/)
-- Ensure the `proxy` network exists:
-  ```bash
-  docker network create proxy 2>/dev/null || true
-  ```
 
-## 2. Install `mkcert` locally
-
-> **Note**: This is required to generate a root CA for your local HTTPS certificates.
+## 2. Installation
 
 ```bash
-# Install dependencies
+# Install dependencies and mkcert
 sudo apt update
 sudo apt install -y curl libnss3-tools
-
-# Install mkcert
-curl -L -o mkcert https://dl.filippo.io/mkcert/latest?for=linux/amd64
+curl -L -o mkcert "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
 chmod +x mkcert
 sudo mv mkcert /usr/local/bin/mkcert
 
 # Trust the root CA
 mkcert -install
-```
 
-## 3. Generate certificates
-
-After installing `mkcert` and trusting the root CA, generate the local certificates for Traefik to use:
-
-```bash
+# Generate certificates
 mkcert \
-  -cert-file certs/local-cert.pem \
-  -key-file certs/local-key.pem \
-  127.0.0.1 localhost
-```
+  -cert-file certs/localhost.pem \
+  -key-file certs/localhost-key.pem \
+  127.0.0.1 localhost "*.local"
 
-## 4. Start Traefik
+# Ensure the proxy Docker network exists
+docker network create proxy 2>/dev/null || true
 
-```bash
+# Start Traefik
+docker compose down --timeout=0
 docker compose up -d
 ```
 
-## 5. Usage
+## 3. Usage
 
 To connect another project to this Traefik instance:
 
@@ -76,17 +65,17 @@ To connect another project to this Traefik instance:
     127.0.0.1 app.local
     ```
 
-## 6. Dashboard
+## 4. Dashboard
 - [http://localhost:8090](http://localhost:8090)
 
-## 7. Optional: Generate certificates using Docker
+## 5. Optional: Generate certificates using Docker
 
 ```bash
 docker run --rm \
   -v $(pwd)/certs:/certs \
   alpine/mkcert \
-  -cert-file /certs/local-cert.pem \
-  -key-file /certs/local-key.pem \
+  -cert-file /certs/localhost.pem \
+  -key-file /certs/localhost-key.pem \
   127.0.0.1 localhost "*.local"
 ```
 
@@ -96,12 +85,12 @@ Or using docker compose:
 mkcert:
   image: alpine/mkcert
   container_name: mkcert
-  command: -cert-file /certs/local-cert.pem -key-file /certs/local-key.pem localhost 127.0.0.1 "*.local"
+  command: -cert-file /certs/localhost.pem -key-file /certs/localhost-key.pem localhost 127.0.0.1 "*.local"
   volumes: [./certs:/certs, "${HOME}/.local/share/mkcert:/root/.local/share/mkcert"]
 ```
 Note that by doing this, you need to add certificates to browsers manually.
 
-## 8. Troubleshooting
+## 6. Troubleshooting
 If your browser shows a "Not Secure" warning:
 1. Ensure you ran `mkcert -install` on your host.
 2. Restart your browser entirely.
