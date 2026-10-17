@@ -23,7 +23,7 @@ sudo apt update
 sudo apt install -y curl libnss3-tools
 
 # Install mkcert
-curl -L -o mkcert "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+curl -L -o mkcert https://dl.filippo.io/mkcert/latest?for=linux/amd64
 chmod +x mkcert
 sudo mv mkcert /usr/local/bin/mkcert
 
@@ -39,7 +39,7 @@ After installing `mkcert` and trusting the root CA, generate the local certifica
 mkcert \
   -cert-file certs/local-cert.pem \
   -key-file certs/local-key.pem \
-  127.0.0.1 localhost "*.local"
+  127.0.0.1 localhost
 ```
 
 ### Optional: Generate certificates using Docker:
