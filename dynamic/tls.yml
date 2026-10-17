@@ -2,26 +2,3 @@ tls:
   certificates:
     - certFile: /certs/localhost.pem
       keyFile: /certs/localhost-key.pem
-
-    - certFile: /certs/lodorecords.local.pem
-      keyFile: /certs/lodorecords.local-key.pem
-
-    - certFile: /certs/thiagobraga.dev.local.pem
-      keyFile: /certs/thiagobraga.dev.local-key.pem
-
-    - certFile: /certs/adguard.local.pem
-      keyFile: /certs/adguard.local-key.pem
-
-    - certFile: /certs/feedbeck.local.pem
-      keyFile: /certs/feedbeck.local-key.pem
-
-    - certFile: /certs/sociopata.org.local.pem
-      keyFile: /certs/sociopata.org.local-key.pem
-
-    - certFile: /certs/tauste-playwright.local.pem
-      keyFile: /certs/tauste-playwright.local-key.pem
-
-http:
-  serversTransports:
-    insecure:
-      insecureSkipVerify: true
